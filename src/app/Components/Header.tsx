@@ -1,20 +1,23 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { 
-  Apple, 
-  Search, 
-  ShoppingBag, 
-  User
-} from 'lucide-react';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { Apple, Search, ShoppingBag, User } from "lucide-react";
 
 interface HeaderProps {
   categories: string[];
 }
 
 export default function Header({ categories = [] }: HeaderProps) {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
+  const router = useRouter();
+
+  const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && searchQuery.trim()) {
+      router.push(`/product?search=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
 
   return (
     <header className="sticky top-0 z-10 bg-white shadow-sm">
@@ -23,17 +26,18 @@ export default function Header({ categories = [] }: HeaderProps) {
           {/* Logo */}
           <Link href="/" className="flex items-center">
             <Apple className="h-8 w-8 text-black" />
-            <span className="ml-2 text-xl font-medium hidden sm:inline">Macos Store</span>
+            <span className="ml-2 text-xl font-medium hidden sm:inline">
+              Macos Store
+            </span>
           </Link>
-
 
           {/* Navigation Links */}
           <nav className="hidden lg:block">
             <ul className="flex space-x-8">
               {categories.map((category) => (
                 <li key={category}>
-                  <Link 
-                    href={`/category/${category.toLowerCase().replace(' ', '-')}`}
+                  <Link
+                    href={`/product?category=${encodeURIComponent(category)}`}
                     className="text-sm font-medium text-gray-700 hover:text-blue-600"
                   >
                     {category}
@@ -54,15 +58,19 @@ export default function Header({ categories = [] }: HeaderProps) {
                   className="ml-2 bg-transparent text-sm focus:outline-none"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={handleSearch}
                 />
               </div>
             </div>
-            
+
             <Link href="/login" className="text-gray-700 hover:text-blue-600">
               <User className="h-6 w-6" />
             </Link>
-            
-            <Link href="/cart" className="relative text-gray-700 hover:text-blue-600">
+
+            <Link
+              href="/cart"
+              className="relative text-gray-700 hover:text-blue-600"
+            >
               <ShoppingBag className="h-6 w-6" />
               <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-xs text-white">
                 0

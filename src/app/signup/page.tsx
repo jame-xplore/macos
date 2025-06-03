@@ -1,74 +1,89 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Apple } from 'lucide-react';
-import Link from 'next/link';
+import { useState } from "react";
+import { Apple } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import axios from "axios";
 
 export default function SignupPage() {
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
   });
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [agreeTerms, setAgreeTerms] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
-  const handleSubmit = (event: React.MouseEvent) => {
+  const router = useRouter();
+
+  const handleSubmit = async (event: React.MouseEvent) => {
     event.preventDefault();
     setLoading(true);
-    setError('');
-    
-    // Form validation
-    if (!formData.firstName || !formData.lastName || !formData.email || !formData.password) {
-      setError('Please fill out all required fields');
+    setError("");
+
+    const { firstName, lastName, email, password, confirmPassword } = formData;
+
+    // Client-side validation
+    if (!firstName || !lastName || !email || !password || !confirmPassword) {
+      setError("Please fill out all required fields");
       setLoading(false);
       return;
     }
-    
-    if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
       setLoading(false);
       return;
     }
-    
+
     if (!agreeTerms) {
-      setError('You must agree to the Terms and Conditions');
+      setError("You must agree to the Terms and Conditions");
       setLoading(false);
       return;
     }
-    
-    // Password strength validation
-    if (formData.password.length < 8) {
-      setError('Password must be at least 8 characters long');
+
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters long");
       setLoading(false);
       return;
     }
-    
-    // Simulate API call
-    setTimeout(() => {
-      console.log('Registration attempt with:', { email: formData.email });
-      
-      // In a real app, you'd make an API call to register the user
-      // After successful registration, redirect to login
-      alert('Account created successfully! Redirecting to login...');
-      // For Next.js navigation:
-      // import { useRouter } from 'next/navigation';
-      // const router = useRouter();
-      // router.push('/login');
-      
+
+    try {
+      const response = await axios.post(
+        "http://localhost:3001/api/auth/register",
+        {
+          firstName,
+          lastName,
+          email,
+          password,
+        }
+      );
+
+      // Success: redirect to login
+      alert("Account created successfully!");
+      router.push("/login");
+    } catch (error: any) {
+      // Smart error message handling
+      const message =
+        error?.response?.data?.message || // from backend if structured
+        error?.response?.data?.error || // fallback to generic field
+        "Registration failed. Please try again.";
+      setError(message);
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
   };
 
   return (
@@ -78,7 +93,9 @@ export default function SignupPage() {
           <div className="mb-2 rounded-full bg-gray-100 p-3">
             <Apple className="h-8 w-8 text-black" />
           </div>
-          <h2 className="mt-2 text-2xl font-bold text-gray-900">Create your Macos account</h2>
+          <h2 className="mt-2 text-2xl font-bold text-gray-900">
+            Create your Macos account
+          </h2>
           <p className="mt-2 text-sm text-gray-600">
             Enter your details to get started
           </p>
@@ -96,7 +113,10 @@ export default function SignupPage() {
           <div className="space-y-4 rounded-md">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="firstName"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   First Name
                 </label>
                 <input
@@ -110,7 +130,10 @@ export default function SignupPage() {
                 />
               </div>
               <div>
-                <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="lastName"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Last Name
                 </label>
                 <input
@@ -124,9 +147,12 @@ export default function SignupPage() {
                 />
               </div>
             </div>
-            
+
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Email address
               </label>
               <input
@@ -140,9 +166,12 @@ export default function SignupPage() {
                 onChange={handleChange}
               />
             </div>
-            
+
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Password
               </label>
               <input
@@ -158,9 +187,12 @@ export default function SignupPage() {
                 Password must be at least 8 characters long
               </p>
             </div>
-            
+
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="confirmPassword"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Confirm Password
               </label>
               <input
@@ -185,11 +217,11 @@ export default function SignupPage() {
               onChange={(e) => setAgreeTerms(e.target.checked)}
             />
             <label htmlFor="terms" className="ml-2 block text-sm text-gray-900">
-              I agree to the{' '}
+              I agree to the{" "}
               <button className="font-medium text-blue-600 hover:text-blue-500">
                 Terms and Conditions
-              </button>{' '}
-              and{' '}
+              </button>{" "}
+              and{" "}
               <button className="font-medium text-blue-600 hover:text-blue-500">
                 Privacy Policy
               </button>
@@ -202,14 +234,17 @@ export default function SignupPage() {
               disabled={loading}
               className="group relative flex w-full justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
-              {loading ? 'Creating account...' : 'Create account'}
+              {loading ? "Creating account..." : "Create account"}
             </button>
           </div>
         </div>
 
         <p className="mt-6 text-center text-sm text-gray-600">
-          Already have an account?{' '}
-          <Link href="/login" className="font-medium text-blue-600 hover:text-blue-500">
+          Already have an account?{" "}
+          <Link
+            href="/login"
+            className="font-medium text-blue-600 hover:text-blue-500"
+          >
             Sign in
           </Link>
         </p>

@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
+import Link from "next/link";
 
 interface FooterProps {
   categories: string[];
@@ -12,11 +12,16 @@ export default function Footer({ categories = [] }: FooterProps) {
       <div className="mx-auto max-w-7xl px-4 pt-12 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider">Products</h3>
+            <h3 className="text-sm font-semibold uppercase tracking-wider">
+              Products
+            </h3>
             <ul className="mt-4 space-y-2">
               {categories.map((category) => (
                 <li key={category}>
-                  <Link href="#" className="text-gray-300 hover:text-white">
+                  <Link
+                    href={`/product?category=${encodeURIComponent(category)}`}
+                    className="text-gray-300 hover:text-white"
+                  >
                     {category}
                   </Link>
                 </li>
@@ -24,7 +29,9 @@ export default function Footer({ categories = [] }: FooterProps) {
             </ul>
           </div>
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider">Support</h3>
+            <h3 className="text-sm font-semibold uppercase tracking-wider">
+              Support
+            </h3>
             <ul className="mt-4 space-y-2">
               <li>
                 <Link href="#" className="text-gray-300 hover:text-white">
@@ -49,7 +56,9 @@ export default function Footer({ categories = [] }: FooterProps) {
             </ul>
           </div>
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider">Company</h3>
+            <h3 className="text-sm font-semibold uppercase tracking-wider">
+              Company
+            </h3>
             <ul className="mt-4 space-y-2">
               <li>
                 <Link href="#" className="text-gray-300 hover:text-white">
@@ -74,7 +83,9 @@ export default function Footer({ categories = [] }: FooterProps) {
             </ul>
           </div>
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider">Legal</h3>
+            <h3 className="text-sm font-semibold uppercase tracking-wider">
+              Legal
+            </h3>
             <ul className="mt-4 space-y-2">
               <li>
                 <Link href="#" className="text-gray-300 hover:text-white">
