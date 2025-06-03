@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import {
   Filter,
@@ -353,144 +353,47 @@ export default function ProductPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Header Component */}
-      <Header />
+    <Suspense fallback={<div>Loading...</div>}>
+      <div className="min-h-screen bg-white">
+        {/* Header Component */}
+        <Header />
 
-      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-        {/* Page Header */}
-        <div className="border-b border-gray-200 pb-6">
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-            All Products
-          </h1>
-          <p className="mt-2 text-sm text-gray-500">
-            {products.length} {products.length === 1 ? "product" : "products"}{" "}
-            available
-          </p>
-        </div>
-
-        {/* Filters and Sort */}
-        <div className="pt-6 pb-4">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            {/* Mobile Filter Button */}
-            <div className="md:hidden">
-              <button
-                type="button"
-                className="flex w-full items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
-                onClick={() => setShowFilters(!showFilters)}
-              >
-                <Filter className="mr-2 h-4 w-4" />
-                {showFilters ? "Hide Filters" : "Show Filters"}
-              </button>
-            </div>
-
-            {/* Desktop Filters */}
-            <div className="hidden md:flex md:items-center md:gap-x-4">
-              <div className="flex items-center">
-                <span className="mr-2 text-sm font-medium text-gray-700">
-                  Category:
-                </span>
-                {/* Desktop and mobile category select */}
-                <select
-                  className="rounded-md border border-gray-300 py-1.5 pl-3 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  value={selectedCategory}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    if (value === "") {
-                      router.push("/product");
-                    } else {
-                      router.push(
-                        `/product?category=${encodeURIComponent(value)}`
-                      );
-                    }
-                  }}
-                >
-                  <option value="">All Categories</option>
-                  {categories.map((category) => (
-                    <option key={category} value={category}>
-                      {category}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="flex items-center">
-                <span className="mr-2 text-sm font-medium text-gray-700">
-                  Sort by:
-                </span>
-                <select
-                  className="rounded-md border border-gray-300 py-1.5 pl-3 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  value={sortOption}
-                  onChange={(e) => setSortOption(e.target.value)}
-                >
-                  <option value="featured">Featured</option>
-                  <option value="price-low">Price: Low to High</option>
-                  <option value="price-high">Price: High to Low</option>
-                  <option value="name-asc">Name: A to Z</option>
-                  <option value="name-desc">Name: Z to A</option>
-                  <option value="rating">Highest Rated</option>
-                  <option value="newest">Newest First</option>
-                </select>
-              </div>
-
-              <button
-                className="text-sm text-blue-600 hover:text-blue-800"
-                onClick={resetFilters}
-              >
-                Reset Filters
-              </button>
-            </div>
-
-            {/* View toggle and sort (mobile) */}
-            <div className="flex items-center justify-between gap-4">
-              <div className="flex md:hidden items-center">
-                <span className="mr-2 text-sm font-medium text-gray-700">
-                  Sort:
-                </span>
-                <select
-                  className="rounded-md border border-gray-300 py-1.5 pl-3 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  value={sortOption}
-                  onChange={(e) => setSortOption(e.target.value)}
-                >
-                  <option value="featured">Featured</option>
-                  <option value="price-low">Price: Low to High</option>
-                  <option value="price-high">Price: High to Low</option>
-                </select>
-              </div>
-
-              <div className="flex border rounded-md">
-                <button
-                  className={`p-2 ${
-                    viewMode === "grid" ? "bg-gray-100" : "bg-white"
-                  }`}
-                  onClick={() => setViewMode("grid")}
-                >
-                  <Grid className="h-5 w-5 text-gray-600" />
-                </button>
-                <button
-                  className={`p-2 ${
-                    viewMode === "list" ? "bg-gray-100" : "bg-white"
-                  }`}
-                  onClick={() => setViewMode("list")}
-                >
-                  <List className="h-5 w-5 text-gray-600" />
-                </button>
-              </div>
-            </div>
+        <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+          {/* Page Header */}
+          <div className="border-b border-gray-200 pb-6">
+            <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+              All Products
+            </h1>
+            <p className="mt-2 text-sm text-gray-500">
+              {products.length} {products.length === 1 ? "product" : "products"}{" "}
+              available
+            </p>
           </div>
 
-          {/* Mobile Filters Panel */}
-          {showFilters && (
-            <div className="mt-4 border rounded-md p-4 md:hidden">
-              <div className="space-y-6">
-                {/* Category filter */}
-                <div>
-                  <h3 className="text-sm font-medium text-gray-900">
-                    Category
-                  </h3>
-                  {/* Mobile filter (inside showFilters panel) */}
+          {/* Filters and Sort */}
+          <div className="pt-6 pb-4">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              {/* Mobile Filter Button */}
+              <div className="md:hidden">
+                <button
+                  type="button"
+                  className="flex w-full items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
+                  onClick={() => setShowFilters(!showFilters)}
+                >
+                  <Filter className="mr-2 h-4 w-4" />
+                  {showFilters ? "Hide Filters" : "Show Filters"}
+                </button>
+              </div>
+
+              {/* Desktop Filters */}
+              <div className="hidden md:flex md:items-center md:gap-x-4">
+                <div className="flex items-center">
+                  <span className="mr-2 text-sm font-medium text-gray-700">
+                    Category:
+                  </span>
+                  {/* Desktop and mobile category select */}
                   <select
-                    className="mt-2 w-full rounded-md border border-gray-300 py-1.5 pl-3 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="rounded-md border border-gray-300 py-1.5 pl-3 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     value={selectedCategory}
                     onChange={(e) => {
                       const value = e.target.value;
@@ -510,6 +413,252 @@ export default function ProductPage() {
                       </option>
                     ))}
                   </select>
+                </div>
+
+                <div className="flex items-center">
+                  <span className="mr-2 text-sm font-medium text-gray-700">
+                    Sort by:
+                  </span>
+                  <select
+                    className="rounded-md border border-gray-300 py-1.5 pl-3 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    value={sortOption}
+                    onChange={(e) => setSortOption(e.target.value)}
+                  >
+                    <option value="featured">Featured</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                    <option value="name-asc">Name: A to Z</option>
+                    <option value="name-desc">Name: Z to A</option>
+                    <option value="rating">Highest Rated</option>
+                    <option value="newest">Newest First</option>
+                  </select>
+                </div>
+
+                <button
+                  className="text-sm text-blue-600 hover:text-blue-800"
+                  onClick={resetFilters}
+                >
+                  Reset Filters
+                </button>
+              </div>
+
+              {/* View toggle and sort (mobile) */}
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex md:hidden items-center">
+                  <span className="mr-2 text-sm font-medium text-gray-700">
+                    Sort:
+                  </span>
+                  <select
+                    className="rounded-md border border-gray-300 py-1.5 pl-3 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    value={sortOption}
+                    onChange={(e) => setSortOption(e.target.value)}
+                  >
+                    <option value="featured">Featured</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                  </select>
+                </div>
+
+                <div className="flex border rounded-md">
+                  <button
+                    className={`p-2 ${
+                      viewMode === "grid" ? "bg-gray-100" : "bg-white"
+                    }`}
+                    onClick={() => setViewMode("grid")}
+                  >
+                    <Grid className="h-5 w-5 text-gray-600" />
+                  </button>
+                  <button
+                    className={`p-2 ${
+                      viewMode === "list" ? "bg-gray-100" : "bg-white"
+                    }`}
+                    onClick={() => setViewMode("list")}
+                  >
+                    <List className="h-5 w-5 text-gray-600" />
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Mobile Filters Panel */}
+            {showFilters && (
+              <div className="mt-4 border rounded-md p-4 md:hidden">
+                <div className="space-y-6">
+                  {/* Category filter */}
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-900">
+                      Category
+                    </h3>
+                    {/* Mobile filter (inside showFilters panel) */}
+                    <select
+                      className="mt-2 w-full rounded-md border border-gray-300 py-1.5 pl-3 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      value={selectedCategory}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (value === "") {
+                          router.push("/product");
+                        } else {
+                          router.push(
+                            `/product?category=${encodeURIComponent(value)}`
+                          );
+                        }
+                      }}
+                    >
+                      <option value="">All Categories</option>
+                      {categories.map((category) => (
+                        <option key={category} value={category}>
+                          {category}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Color filter */}
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-900">Color</h3>
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {allColors.map((color) => (
+                        <button
+                          key={color}
+                          className={`px-3 py-1 text-xs rounded-full ${
+                            selectedColors.includes(color)
+                              ? "bg-blue-100 text-blue-800 border-blue-300"
+                              : "bg-gray-100 text-gray-800 border-gray-200"
+                          } border`}
+                          onClick={() => handleColorToggle(color)}
+                        >
+                          {color}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Price Range */}
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-900">
+                      Price Range
+                    </h3>
+                    <div className="mt-2 flex items-center space-x-4">
+                      <div className="flex items-center">
+                        <span className="mr-2 text-xs text-gray-500">$</span>
+                        <input
+                          type="number"
+                          min="0"
+                          max={priceRange.max}
+                          value={priceRange.min}
+                          onChange={(e) =>
+                            handlePriceChange("min", e.target.value)
+                          }
+                          className="w-20 rounded-md border border-gray-300 py-1 px-2 text-sm"
+                        />
+                      </div>
+                      <span className="text-xs text-gray-500">to</span>
+                      <div className="flex items-center">
+                        <span className="mr-2 text-xs text-gray-500">$</span>
+                        <input
+                          type="number"
+                          min={priceRange.min}
+                          value={priceRange.max}
+                          onChange={(e) =>
+                            handlePriceChange("max", e.target.value)
+                          }
+                          className="w-20 rounded-md border border-gray-300 py-1 px-2 text-sm"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Availability filters */}
+                  <div className="space-y-2">
+                    <div className="flex items-center">
+                      <input
+                        id="in-stock-mobile"
+                        type="checkbox"
+                        className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                        checked={onlyInStock}
+                        onChange={() => setOnlyInStock(!onlyInStock)}
+                      />
+                      <label
+                        htmlFor="in-stock-mobile"
+                        className="ml-3 text-sm text-gray-600"
+                      >
+                        In Stock Only
+                      </label>
+                    </div>
+                    <div className="flex items-center">
+                      <input
+                        id="new-arrivals-mobile"
+                        type="checkbox"
+                        className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                        checked={onlyNew}
+                        onChange={() => setOnlyNew(!onlyNew)}
+                      />
+                    </div>
+                  </div>
+
+                  <button
+                    className="w-full rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                    onClick={() => setShowFilters(false)}
+                  >
+                    Apply Filters
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="lg:grid lg:grid-cols-4 lg:gap-x-8">
+            {/* Desktop Filter sidebar */}
+            <div className="hidden lg:block">
+              <div className="space-y-6 border-r pr-6">
+                {/* Category filter */}
+                <div>
+                  <h3 className="text-sm font-medium text-gray-900">
+                    Category
+                  </h3>
+                  <div className="mt-2 space-y-2">
+                    <div className="flex items-center">
+                      <input
+                        id="all-categories"
+                        type="radio"
+                        name="category"
+                        className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500"
+                        checked={selectedCategory === ""}
+                        onChange={() => router.push("/product")}
+                      />
+                      <label
+                        htmlFor="all-categories"
+                        className="ml-3 text-sm text-gray-600"
+                      >
+                        All Categories
+                      </label>
+                    </div>
+
+                    {categories.map((category) => (
+                      <div key={category} className="flex items-center">
+                        <input
+                          id={`category-${category}`}
+                          type="radio"
+                          name="category"
+                          className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500"
+                          checked={selectedCategory === category}
+                          onChange={() =>
+                            router.push(
+                              `/product?category=${encodeURIComponent(
+                                category
+                              )}`
+                            )
+                          }
+                        />
+                        <label
+                          htmlFor={`category-${category}`}
+                          className="ml-3 text-sm text-gray-600"
+                        >
+                          {category}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
                 {/* Color filter */}
@@ -537,9 +686,9 @@ export default function ProductPage() {
                   <h3 className="text-sm font-medium text-gray-900">
                     Price Range
                   </h3>
-                  <div className="mt-2 flex items-center space-x-4">
-                    <div className="flex items-center">
-                      <span className="mr-2 text-xs text-gray-500">$</span>
+                  <div className="mt-2 space-y-4">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-xs text-gray-500">$</span>
                       <input
                         type="number"
                         min="0"
@@ -550,10 +699,8 @@ export default function ProductPage() {
                         }
                         className="w-20 rounded-md border border-gray-300 py-1 px-2 text-sm"
                       />
-                    </div>
-                    <span className="text-xs text-gray-500">to</span>
-                    <div className="flex items-center">
-                      <span className="mr-2 text-xs text-gray-500">$</span>
+                      <span className="text-xs text-gray-500">to</span>
+                      <span className="text-xs text-gray-500">$</span>
                       <input
                         type="number"
                         min={priceRange.min}
@@ -571,258 +718,121 @@ export default function ProductPage() {
                 <div className="space-y-2">
                   <div className="flex items-center">
                     <input
-                      id="in-stock-mobile"
+                      id="in-stock"
                       type="checkbox"
                       className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                       checked={onlyInStock}
                       onChange={() => setOnlyInStock(!onlyInStock)}
                     />
                     <label
-                      htmlFor="in-stock-mobile"
+                      htmlFor="in-stock"
                       className="ml-3 text-sm text-gray-600"
                     >
                       In Stock Only
                     </label>
                   </div>
-                  <div className="flex items-center">
-                    <input
-                      id="new-arrivals-mobile"
-                      type="checkbox"
-                      className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                      checked={onlyNew}
-                      onChange={() => setOnlyNew(!onlyNew)}
-                    />
-                  </div>
                 </div>
 
                 <button
                   className="w-full rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
-                  onClick={() => setShowFilters(false)}
-                >
-                  Apply Filters
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-
-        <div className="lg:grid lg:grid-cols-4 lg:gap-x-8">
-          {/* Desktop Filter sidebar */}
-          <div className="hidden lg:block">
-            <div className="space-y-6 border-r pr-6">
-              {/* Category filter */}
-              <div>
-                <h3 className="text-sm font-medium text-gray-900">Category</h3>
-                <div className="mt-2 space-y-2">
-                  <div className="flex items-center">
-                    <input
-                      id="all-categories"
-                      type="radio"
-                      name="category"
-                      className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500"
-                      checked={selectedCategory === ""}
-                      onChange={() => router.push("/product")}
-                    />
-                    <label
-                      htmlFor="all-categories"
-                      className="ml-3 text-sm text-gray-600"
-                    >
-                      All Categories
-                    </label>
-                  </div>
-
-                  {categories.map((category) => (
-                    <div key={category} className="flex items-center">
-                      <input
-                        id={`category-${category}`}
-                        type="radio"
-                        name="category"
-                        className="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500"
-                        checked={selectedCategory === category}
-                        onChange={() =>
-                          router.push(
-                            `/product?category=${encodeURIComponent(category)}`
-                          )
-                        }
-                      />
-                      <label
-                        htmlFor={`category-${category}`}
-                        className="ml-3 text-sm text-gray-600"
-                      >
-                        {category}
-                      </label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Color filter */}
-              <div>
-                <h3 className="text-sm font-medium text-gray-900">Color</h3>
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {allColors.map((color) => (
-                    <button
-                      key={color}
-                      className={`px-3 py-1 text-xs rounded-full ${
-                        selectedColors.includes(color)
-                          ? "bg-blue-100 text-blue-800 border-blue-300"
-                          : "bg-gray-100 text-gray-800 border-gray-200"
-                      } border`}
-                      onClick={() => handleColorToggle(color)}
-                    >
-                      {color}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Price Range */}
-              <div>
-                <h3 className="text-sm font-medium text-gray-900">
-                  Price Range
-                </h3>
-                <div className="mt-2 space-y-4">
-                  <div className="flex items-center space-x-2">
-                    <span className="text-xs text-gray-500">$</span>
-                    <input
-                      type="number"
-                      min="0"
-                      max={priceRange.max}
-                      value={priceRange.min}
-                      onChange={(e) => handlePriceChange("min", e.target.value)}
-                      className="w-20 rounded-md border border-gray-300 py-1 px-2 text-sm"
-                    />
-                    <span className="text-xs text-gray-500">to</span>
-                    <span className="text-xs text-gray-500">$</span>
-                    <input
-                      type="number"
-                      min={priceRange.min}
-                      value={priceRange.max}
-                      onChange={(e) => handlePriceChange("max", e.target.value)}
-                      className="w-20 rounded-md border border-gray-300 py-1 px-2 text-sm"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Availability filters */}
-              <div className="space-y-2">
-                <div className="flex items-center">
-                  <input
-                    id="in-stock"
-                    type="checkbox"
-                    className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                    checked={onlyInStock}
-                    onChange={() => setOnlyInStock(!onlyInStock)}
-                  />
-                  <label
-                    htmlFor="in-stock"
-                    className="ml-3 text-sm text-gray-600"
-                  >
-                    In Stock Only
-                  </label>
-                </div>
-              </div>
-
-              <button
-                className="w-full rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
-                onClick={resetFilters}
-              >
-                Reset All Filters
-              </button>
-            </div>
-          </div>
-
-          {/* Products Grid/List */}
-          <div className="mt-6 lg:col-span-3 lg:mt-0">
-            {products.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-12">
-                <p className="text-lg font-medium text-gray-900">
-                  No products found
-                </p>
-                <p className="mt-1 text-sm text-gray-500">
-                  Try adjusting your filters
-                </p>
-                <button
-                  className="mt-4 rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
                   onClick={resetFilters}
                 >
-                  Clear All Filters
+                  Reset All Filters
                 </button>
               </div>
-            ) : (
-              <>
-                {viewMode === "grid" ? (
-                  <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3">
-                    {currentProducts.map((product) => (
-                      <ProductCard key={product.id} product={product} />
-                    ))}
-                  </div>
-                ) : (
-                  <div className="space-y-6">
-                    {currentProducts.map((product) => (
-                      <ProductListItem key={product.id} product={product} />
-                    ))}
-                  </div>
-                )}
+            </div>
 
-                {/* Pagination */}
-                {totalPages > 1 && (
-                  <div className="mt-8 flex items-center justify-center">
-                    <nav
-                      className="flex items-center space-x-2"
-                      aria-label="Pagination"
-                    >
-                      <button
-                        className={`rounded-md border ${
-                          currentPage === 1
-                            ? "border-gray-200 bg-gray-100 text-gray-400"
-                            : "border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
-                        } px-3 py-2`}
-                        disabled={currentPage === 1}
-                        onClick={() => setCurrentPage(currentPage - 1)}
-                      >
-                        <span className="sr-only">Previous</span>
-                        <ChevronLeft className="h-5 w-5" />
-                      </button>
-
-                      {[...Array(totalPages)].map((_, i) => (
-                        <button
-                          key={i}
-                          className={`px-3 py-2 rounded-md ${
-                            currentPage === i + 1
-                              ? "bg-blue-600 text-white"
-                              : "bg-white text-gray-700 hover:bg-gray-50"
-                          }`}
-                          onClick={() => setCurrentPage(i + 1)}
-                        >
-                          {i + 1}
-                        </button>
+            {/* Products Grid/List */}
+            <div className="mt-6 lg:col-span-3 lg:mt-0">
+              {products.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-12">
+                  <p className="text-lg font-medium text-gray-900">
+                    No products found
+                  </p>
+                  <p className="mt-1 text-sm text-gray-500">
+                    Try adjusting your filters
+                  </p>
+                  <button
+                    className="mt-4 rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                    onClick={resetFilters}
+                  >
+                    Clear All Filters
+                  </button>
+                </div>
+              ) : (
+                <>
+                  {viewMode === "grid" ? (
+                    <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3">
+                      {currentProducts.map((product) => (
+                        <ProductCard key={product.id} product={product} />
                       ))}
+                    </div>
+                  ) : (
+                    <div className="space-y-6">
+                      {currentProducts.map((product) => (
+                        <ProductListItem key={product.id} product={product} />
+                      ))}
+                    </div>
+                  )}
 
-                      <button
-                        className={`rounded-md border ${
-                          currentPage === totalPages
-                            ? "border-gray-200 bg-gray-100 text-gray-400"
-                            : "border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
-                        } px-3 py-2`}
-                        disabled={currentPage === totalPages}
-                        onClick={() => setCurrentPage(currentPage + 1)}
+                  {/* Pagination */}
+                  {totalPages > 1 && (
+                    <div className="mt-8 flex items-center justify-center">
+                      <nav
+                        className="flex items-center space-x-2"
+                        aria-label="Pagination"
                       >
-                        <span className="sr-only">Next</span>
-                        <ChevronRight className="h-5 w-5" />
-                      </button>
-                    </nav>
-                  </div>
-                )}
-              </>
-            )}
-          </div>
-        </div>
-      </main>
+                        <button
+                          className={`rounded-md border ${
+                            currentPage === 1
+                              ? "border-gray-200 bg-gray-100 text-gray-400"
+                              : "border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
+                          } px-3 py-2`}
+                          disabled={currentPage === 1}
+                          onClick={() => setCurrentPage(currentPage - 1)}
+                        >
+                          <span className="sr-only">Previous</span>
+                          <ChevronLeft className="h-5 w-5" />
+                        </button>
 
-      {/* Footer Component */}
-      <Footer categories={categories} />
-    </div>
+                        {[...Array(totalPages)].map((_, i) => (
+                          <button
+                            key={i}
+                            className={`px-3 py-2 rounded-md ${
+                              currentPage === i + 1
+                                ? "bg-blue-600 text-white"
+                                : "bg-white text-gray-700 hover:bg-gray-50"
+                            }`}
+                            onClick={() => setCurrentPage(i + 1)}
+                          >
+                            {i + 1}
+                          </button>
+                        ))}
+
+                        <button
+                          className={`rounded-md border ${
+                            currentPage === totalPages
+                              ? "border-gray-200 bg-gray-100 text-gray-400"
+                              : "border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
+                          } px-3 py-2`}
+                          disabled={currentPage === totalPages}
+                          onClick={() => setCurrentPage(currentPage + 1)}
+                        >
+                          <span className="sr-only">Next</span>
+                          <ChevronRight className="h-5 w-5" />
+                        </button>
+                      </nav>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          </div>
+        </main>
+
+        {/* Footer Component */}
+        <Footer categories={categories} />
+      </div>
+    </Suspense>
   );
 }
