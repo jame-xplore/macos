@@ -125,7 +125,7 @@ const ProductDetailPage = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <Header />
+      <Header categories={["iPhone", "iPad", "Mac", "Watch", "Accessories"]} />
       {/* Breadcrumb */}
       <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4">
         <ol className="flex items-center space-x-2 text-sm">
